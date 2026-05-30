@@ -9,9 +9,12 @@ const data = {
 };
 
 const hint = document.getElementById('hint');
+const treeCanvas = document.getElementById('treeCanvas');
 const nodeLayer = document.getElementById('nodeLayer');
 const linkLayer = document.getElementById('linkLayer');
 const ns = 'http://www.w3.org/2000/svg';
+const ROOT_NODE_ID = 'graph-root';
+const CHILD_NODE_CLASS = 'graph-child';
 let selectedYearId = null;
 
 const subjectLayouts = {
@@ -35,14 +38,17 @@ const subjectLayouts = {
 function isMobile() {
   return window.matchMedia('(max-width: 640px)').matches;
 }
+
 function isTablet() {
   return window.matchMedia('(min-width: 641px) and (max-width: 1024px)').matches;
 }
+
 function screenVariant() {
   if (isMobile()) return 'mobile';
   if (isTablet()) return 'tablet';
   return 'desktop';
 }
+
 function yearLayout() {
   const variant = screenVariant();
   if (variant === 'mobile') {
@@ -71,16 +77,23 @@ function yearLayout() {
 
 function clearTree() {
   nodeLayer.innerHTML = '';
-  linkLayer.innerHTML = '<defs><linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(45,212,191,0.78)" /><stop offset="100%" stop-color="rgba(59,130,246,0.62)" /></linearGradient></defs>';
+  linkLayer.innerHTML = '';
 }
 
-function addNode({ id, label, x, y, type, logoOnly = false, icon = false, onClick }) {
+function addNode({ id, label, x, y, type, logoOnly = false, icon = false, onClick, asRoot = false, asChild = false }) {
   const el = document.createElement('button');
   el.type = 'button';
   el.className = `node ${type}${logoOnly ? ' logo-only' : ''}`;
   el.style.left = `${x}%`;
   el.style.top = `${y}%`;
   el.dataset.id = id;
+
+  if (asRoot) {
+    el.id = ROOT_NODE_ID;
+  }
+  if (asChild) {
+    el.classList.add(CHILD_NODE_CLASS);
+  }
 
   if (icon) {
     const img = document.createElement('img');
@@ -102,34 +115,69 @@ function addNode({ id, label, x, y, type, logoOnly = false, icon = false, onClic
   return el;
 }
 
-function drawConnector(from, to, sourceRadius = 9, targetRadius = 8) {
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  const len = Math.hypot(dx, dy) || 1;
-  const ux = dx / len;
-  const uy = dy / len;
-  const sx = from.x + ux * sourceRadius;
-  const sy = from.y + uy * sourceRadius;
-  const ex = to.x - ux * targetRadius;
-  const ey = to.y - uy * targetRadius;
-  const line = document.createElementNS(ns, 'line');
-  line.setAttribute('x1', sx.toString());
-  line.setAttribute('y1', sy.toString());
-  line.setAttribute('x2', ex.toString());
-  line.setAttribute('y2', ey.toString());
-  line.setAttribute('stroke', 'url(#branchGradient)');
-  line.setAttribute('stroke-width', '1.1');
-  line.setAttribute('stroke-linecap', 'round');
-  line.setAttribute('opacity', '0.95');
-  linkLayer.appendChild(line);
+function nodeCenter(nodeRect, containerRect) {
+  return {
+    x: nodeRect.left - containerRect.left + nodeRect.width / 2,
+    y: nodeRect.top - containerRect.top + nodeRect.height / 2
+  };
+}
+
+function drawConnections() {
+  linkLayer.innerHTML = '';
+
+  const rootNode = nodeLayer.querySelector(`#${ROOT_NODE_ID}`);
+  const childNodes = nodeLayer.querySelectorAll(`.${CHILD_NODE_CLASS}`);
+
+  if (!rootNode || !childNodes.length) return;
+
+  const containerRect = treeCanvas.getBoundingClientRect();
+  const rootCenter = nodeCenter(rootNode.getBoundingClientRect(), containerRect);
+
+  linkLayer.setAttribute('width', String(containerRect.width));
+  linkLayer.setAttribute('height', String(containerRect.height));
+  linkLayer.setAttribute('viewBox', `0 0 ${containerRect.width} ${containerRect.height}`);
+
+  const defs = document.createElementNS(ns, 'defs');
+  const gradient = document.createElementNS(ns, 'linearGradient');
+  gradient.setAttribute('id', 'branchGradient');
+  gradient.setAttribute('x1', '0%');
+  gradient.setAttribute('y1', '0%');
+  gradient.setAttribute('x2', '100%');
+  gradient.setAttribute('y2', '100%');
+
+  const stopA = document.createElementNS(ns, 'stop');
+  stopA.setAttribute('offset', '0%');
+  stopA.setAttribute('stop-color', 'rgba(45,212,191,0.78)');
+
+  const stopB = document.createElementNS(ns, 'stop');
+  stopB.setAttribute('offset', '100%');
+  stopB.setAttribute('stop-color', 'rgba(59,130,246,0.62)');
+
+  gradient.appendChild(stopA);
+  gradient.appendChild(stopB);
+  defs.appendChild(gradient);
+  linkLayer.appendChild(defs);
+
+  childNodes.forEach((child) => {
+    const childCenter = nodeCenter(child.getBoundingClientRect(), containerRect);
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', String(rootCenter.x));
+    line.setAttribute('y1', String(rootCenter.y));
+    line.setAttribute('x2', String(childCenter.x));
+    line.setAttribute('y2', String(childCenter.y));
+    line.setAttribute('stroke', 'url(#branchGradient)');
+    line.setAttribute('stroke-width', '1.1');
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('opacity', '0.95');
+    linkLayer.appendChild(line);
+  });
 }
 
 function renderHome() {
   clearTree();
   hint.textContent = 'Choose a year to explore subjects.';
 
-  const root = { x: 50, y: 50 };
-  addNode({ id: 'app-root', label: data.appName, x: root.x, y: root.y, type: 'root', logoOnly: true, icon: true });
+  addNode({ id: 'app-root', label: data.appName, x: 50, y: 50, type: 'root', logoOnly: true, icon: true, asRoot: true });
 
   data.years.forEach((year, i) => {
     const p = yearLayout()[i];
@@ -139,12 +187,12 @@ function renderHome() {
       x: p.x,
       y: p.y,
       type: 'year',
+      asChild: true,
       onClick: () => {
         selectedYearId = year.id;
         render();
       }
     });
-    drawConnector(root, p, 10, 8);
   });
 }
 
@@ -158,14 +206,12 @@ function renderYear() {
 
   hint.textContent = 'Tap top logo to go back.';
   const variant = screenVariant();
-  const topRoot = { x: 50, y: variant === 'mobile' ? 16 : 12 };
-  const centerYear = { x: 50, y: variant === 'mobile' ? 44 : variant === 'tablet' ? 50 : 54 };
 
   addNode({
     id: 'app-root-top',
     label: data.appName,
-    x: topRoot.x,
-    y: topRoot.y,
+    x: 50,
+    y: variant === 'mobile' ? 16 : 12,
     type: 'root top',
     logoOnly: true,
     icon: true,
@@ -175,15 +221,20 @@ function renderYear() {
     }
   });
 
-  addNode({ id: 'selected-year', label: year.label, x: centerYear.x, y: centerYear.y, type: 'root' });
-  drawConnector(topRoot, centerYear, 8, 10);
+  addNode({
+    id: 'selected-year',
+    label: year.label,
+    x: 50,
+    y: variant === 'mobile' ? 44 : variant === 'tablet' ? 50 : 54,
+    type: 'root',
+    asRoot: true
+  });
 
   const layout = subjectLayouts[year.subjects.length][variant];
 
   year.subjects.forEach((subject, i) => {
     const p = layout[i];
-    addNode({ id: `${year.id}-${i}`, label: subject, x: p.x, y: p.y, type: 'subject' });
-    drawConnector(centerYear, p, 9, 7);
+    addNode({ id: `${year.id}-${i}`, label: subject, x: p.x, y: p.y, type: 'subject', asChild: true });
   });
 }
 
@@ -193,7 +244,16 @@ function render() {
   } else {
     renderHome();
   }
+  requestAnimationFrame(drawConnections);
 }
 
-window.addEventListener('resize', () => render());
+const observer = new MutationObserver(() => {
+  requestAnimationFrame(drawConnections);
+});
+
+observer.observe(nodeLayer, { childList: true, subtree: true });
+window.addEventListener('resize', drawConnections);
+window.addEventListener('orientationchange', drawConnections);
+window.addEventListener('load', drawConnections);
+
 render();
