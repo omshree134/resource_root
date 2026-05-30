@@ -37,7 +37,8 @@ body {
 }
 
 .link-layer, .node-layer { position: absolute; inset: 0; }
-.link-layer { pointer-events: none; }
+.link-layer { pointer-events: none; z-index: 2; }
+.node-layer { z-index: 1; }
 
 .node {
   position: absolute;
@@ -56,12 +57,12 @@ body {
   box-shadow: 0 12px 34px rgba(2, 6, 23, 0.55);
 }
 .node:hover { transform: translate(-50%, -50%) scale(1.04); box-shadow: 0 0 28px rgba(34, 211, 238, 0.3); }
-.node.year, .node.subject { width: 104px; height: 104px; font-weight: 700; font-size: 18px; }
+.node.year, .node.subject { font-weight: 700; font-size: 18px; }
 .node.root { width: 128px; height: 128px; background: linear-gradient(145deg, rgba(34, 211, 238, 0.35), rgba(59, 130, 246, 0.27)); }
 .node.root.top { width: 96px; height: 96px; }
 .node.logo-only .label { display: none; }
-.node .label { line-height: 1.05; }
-.node.subject { width: 86px; height: 86px; font-size: 14px; }
+.node .label { line-height: 1.15; max-width: 14ch; word-break: normal; overflow-wrap: normal; hyphens: none; }
+.node.subject { font-size: 14px; }
 
 .logo {
   width: 40px;
@@ -76,14 +77,14 @@ body {
 @media (max-width: 640px) {
   .app-shell { padding: 8px; }
   .tree-canvas { height: 66vh; min-height: 400px; }
-  .node.year { width: 90px; height: 90px; font-size: 15px; }
+  .node.year { font-size: 15px; }
   .node.root { width: 112px; height: 112px; }
   .node.root.top { width: 84px; height: 84px; }
-  .node.subject { width: 78px; height: 78px; font-size: 12px; }
+  .node.subject { font-size: 12px; }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
   .tree-canvas { height: 68vh; min-height: 500px; }
-  .node.year { width: 98px; height: 98px; font-size: 16px; }
-  .node.subject { width: 84px; height: 84px; font-size: 13px; }
+  .node.year { font-size: 16px; }
+  .node.subject { font-size: 13px; }
 }

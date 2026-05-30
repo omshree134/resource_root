@@ -2,10 +2,15 @@ const data = {
   appName: 'Resource Root',
   years: [
     { id: 'year1', label: '1st Year', subjects: ['Anatomy', 'Physiology', 'Biochemistry'] },
-    { id: 'year2', label: '2nd Year', subjects: ['Pharmacology', 'Pathology', 'Microbiology', 'Forensic Medicine'] },
+    { id: 'year2', label: '2nd Year', subjects: ['Pharmacology', 'Pathology', 'Microbiology'] },
     { id: 'year3', label: '3rd Year', subjects: ['Community Medicine', 'ENT', 'Ophthalmology'] },
     { id: 'year4', label: '4th Year', subjects: ['Medicine', 'Surgery', 'Pediatrics', 'Orthopedics', 'Obstetrics & Gynecology'] }
   ]
+};
+const subjectLinks = {
+  Microbiology: 'https://drive.google.com/drive/folders/1Qn2Mld6rXPYzjlNZxpKWLBE4M3A9nuVk',
+  Pathology: 'https://drive.google.com/drive/folders/1eat7kdaVT9m1DyGYyjfqHbC0CUOTaKQr',
+  Pharmacology: 'https://drive.google.com/drive/folders/1K0eSdKrp6DfacWllbSG_eZrRqKpkVwsc'
 };
 
 const hint = document.getElementById('hint');
@@ -112,7 +117,28 @@ function addNode({ id, label, x, y, type, logoOnly = false, icon = false, onClic
 
   if (onClick) el.addEventListener('click', onClick);
   nodeLayer.appendChild(el);
+
+  if (type === 'year' || type === 'subject') {
+    applyAdaptiveNodeSize(el);
+  }
+
   return el;
+}
+
+function applyAdaptiveNodeSize(node) {
+  const label = node.querySelector('.label');
+  if (!label) return;
+
+  const labelRect = label.getBoundingClientRect();
+  const style = window.getComputedStyle(node);
+  const paddingX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+  const paddingY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+  const contentSize = Math.max(labelRect.width + paddingX, labelRect.height + paddingY);
+
+  const minSize = node.classList.contains('year') ? 90 : 78;
+  const size = Math.ceil(Math.max(minSize, contentSize));
+  node.style.width = `${size}px`;
+  node.style.height = `${size}px`;
 }
 
 function nodeCenter(nodeRect, containerRect) {
@@ -131,7 +157,9 @@ function drawConnections() {
   if (!rootNode || !childNodes.length) return;
 
   const containerRect = treeCanvas.getBoundingClientRect();
-  const rootCenter = nodeCenter(rootNode.getBoundingClientRect(), containerRect);
+  const rootRect = rootNode.getBoundingClientRect();
+  const rootCenter = nodeCenter(rootRect, containerRect);
+  const rootRadius = Math.min(rootRect.width, rootRect.height) / 2;
 
   linkLayer.setAttribute('width', String(containerRect.width));
   linkLayer.setAttribute('height', String(containerRect.height));
@@ -140,10 +168,11 @@ function drawConnections() {
   const defs = document.createElementNS(ns, 'defs');
   const gradient = document.createElementNS(ns, 'linearGradient');
   gradient.setAttribute('id', 'branchGradient');
-  gradient.setAttribute('x1', '0%');
-  gradient.setAttribute('y1', '0%');
-  gradient.setAttribute('x2', '100%');
-  gradient.setAttribute('y2', '100%');
+  gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
+  gradient.setAttribute('x1', '0');
+  gradient.setAttribute('y1', '0');
+  gradient.setAttribute('x2', String(containerRect.width));
+  gradient.setAttribute('y2', String(containerRect.height));
 
   const stopA = document.createElementNS(ns, 'stop');
   stopA.setAttribute('offset', '0%');
@@ -159,16 +188,30 @@ function drawConnections() {
   linkLayer.appendChild(defs);
 
   childNodes.forEach((child) => {
-    const childCenter = nodeCenter(child.getBoundingClientRect(), containerRect);
+    const childRect = child.getBoundingClientRect();
+    const childCenter = nodeCenter(childRect, containerRect);
+    const childRadius = Math.min(childRect.width, childRect.height) / 2;
+    const dx = childCenter.x - rootCenter.x;
+    const dy = childCenter.y - rootCenter.y;
+    const distance = Math.hypot(dx, dy) || 1;
+    const ux = dx / distance;
+    const uy = dy / distance;
+    const startX = rootCenter.x + ux * rootRadius;
+    const startY = rootCenter.y + uy * rootRadius;
+    const endX = childCenter.x - ux * childRadius;
+    const endY = childCenter.y - uy * childRadius;
+
     const line = document.createElementNS(ns, 'line');
-    line.setAttribute('x1', String(rootCenter.x));
-    line.setAttribute('y1', String(rootCenter.y));
-    line.setAttribute('x2', String(childCenter.x));
-    line.setAttribute('y2', String(childCenter.y));
+    line.setAttribute('x1', String(startX));
+    line.setAttribute('y1', String(startY));
+    line.setAttribute('x2', String(endX));
+    line.setAttribute('y2', String(endY));
     line.setAttribute('stroke', 'url(#branchGradient)');
-    line.setAttribute('stroke-width', '1.1');
+    line.setAttribute('stroke-width', '1.6');
     line.setAttribute('stroke-linecap', 'round');
     line.setAttribute('opacity', '0.95');
+    line.setAttribute('vector-effect', 'non-scaling-stroke');
+    line.setAttribute('shape-rendering', 'geometricPrecision');
     linkLayer.appendChild(line);
   });
 }
@@ -227,14 +270,27 @@ function renderYear() {
     x: 50,
     y: variant === 'mobile' ? 44 : variant === 'tablet' ? 50 : 54,
     type: 'root',
-    asRoot: true
+    asRoot: true,
+    onClick: () => {
+      selectedYearId = null;
+      render();
+    }
   });
 
   const layout = subjectLayouts[year.subjects.length][variant];
 
   year.subjects.forEach((subject, i) => {
     const p = layout[i];
-    addNode({ id: `${year.id}-${i}`, label: subject, x: p.x, y: p.y, type: 'subject', asChild: true });
+    const link = subjectLinks[subject];
+    addNode({
+      id: `${year.id}-${i}`,
+      label: subject,
+      x: p.x,
+      y: p.y,
+      type: 'subject',
+      asChild: true,
+      onClick: link ? () => window.open(link, '_blank', 'noopener,noreferrer') : undefined
+    });
   });
 }
 
