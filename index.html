@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050814" />
+  <meta name="description" content="Resource Root - Interactive MBBS knowledge tree" />
+  <link rel="manifest" href="public/manifest.webmanifest" />
+  <link rel="icon" type="image/png" href="public/icons/icon_root.png" />
+  <link rel="apple-touch-icon" href="public/icons/icon_root.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Resource Root</title>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="tree-wrap">
+      <header class="hero">
+        <h1>Resource Root</h1>
+        <p>Interactive MBBS Learning Graph</p>
+        <small id="hint">Choose a year to explore subjects.</small>
+      </header>
+
+      <div id="treeCanvas" class="tree-canvas" aria-live="polite">
+        <svg id="linkLayer" class="link-layer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div id="nodeLayer" class="node-layer"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

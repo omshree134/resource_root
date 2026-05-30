@@ -1,0 +1,23 @@
+{
+  "name": "Resource Root",
+  "short_name": "ResRoot",
+  "description": "Interactive MBBS notes and study tree",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050814",
+  "theme_color": "#050814",
+  "icons": [
+    {
+      "src": "/icons/icon_root.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon_root.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
