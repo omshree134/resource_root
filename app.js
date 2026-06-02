@@ -36,9 +36,9 @@ const subjectPdfs = {
   Pathology: [
     { title: 'Lange Case Files: Pathology', fileId: '14eEmJBgeQkjuV1_YMAs6MhweSvfcFB6x' },
     { title: 'MedLive Pathology Prof Buster', fileId: '1rrrY_oZrNOg1oec8LaCk_ohqTuWZjDZl' },
-    { title: 'MZ24 Notes: Harsh Mohan Pathology', fileId: '1UQe_TS9wlYXbZc9KufjwqjWHnHBhekyp' },
-    { title: 'MZ24 Notes: Ramadas Nayak Pathology Exam Prep', fileId: '1RZGMWR-2h6r1qQ7cLoV6xmG9OgO3mj-g' },
-    { title: 'MZ24 Notes: Robbins Pathology (11th Edition)', fileId: '1rGzejj30EfzF4DO8VEpOQqP0t32TIVlF' },
+    { title: 'Harsh Mohan Pathology', fileId: '1UQe_TS9wlYXbZc9KufjwqjWHnHBhekyp' },
+    { title: 'Ramadas Nayak Pathology Exam Prep', fileId: '1RZGMWR-2h6r1qQ7cLoV6xmG9OgO3mj-g' },
+    { title: 'Robbins Pathology (11th Edition)', fileId: '1rGzejj30EfzF4DO8VEpOQqP0t32TIVlF' },
     { title: 'Pathology Slides Part 1 (Aaditya)', fileId: '1kUklhn-rym2ubVRk-u0V9UgXcm2rt94g', password: 'aadi@patho' },
     { title: 'Robbins Pathology at a Glance', fileId: '1fgat_sZAX6y-cpUID0mLFzqM_WVHFz1p' },
     { title: 'Pathoma 2021', fileId: '1eZ2lJAqh1bqxSmmItqVvNttBjYoJ9B0M' },
@@ -50,17 +50,17 @@ const subjectPdfs = {
     { title: 'K.D. Tripathi: Classification of Drugs with Doses and Preparations', fileId: '114OV5arctTal_hN6e8U7JOqYcVnIWvBF' },
     { title: 'Katzung Pharmacology Exam Notes', fileId: '1spnGVdYxv6qBO7-iFfZuH9n1PtN0wyEI' },
     { title: 'MedLive Pharmacology Notes', fileId: '1VjOVzuUG0cBu8ZsPVxa2vJ4ZhmIdBkYy' },
-    { title: 'MZ24 Notes: K.D. Tripathi Essentials of Pharmacology', fileId: '1eM1lCvQHZXsH8Ezs4s3Q39zUkOFKzkaH' },
-    { title: 'MZ24 Notes: Lippincott Illustrated Reviews Pharmacology', fileId: '10G5PjocSxGo1Tkk0KffHgJTuJ8xIrmQx' },
-    { title: 'MZ24 Notes: Padmaja Medical Pharmacology', fileId: '1fWfDaXdRdqmKdAHPE252u55CwF_xWmAd' },
-    { title: 'MZ24 Notes: Tara V. Shanbhag Pharmacology', fileId: '1_aP0WWZHib6vmf_SSieraUPt35oQ05TS' },
+    { title: 'K.D. Tripathi Essentials of Pharmacology', fileId: '1eM1lCvQHZXsH8Ezs4s3Q39zUkOFKzkaH' },
+    { title: 'Lippincott Illustrated Reviews Pharmacology', fileId: '10G5PjocSxGo1Tkk0KffHgJTuJ8xIrmQx' },
+    { title: 'Padmaja Medical Pharmacology', fileId: '1fWfDaXdRdqmKdAHPE252u55CwF_xWmAd' },
+    { title: 'Tara V. Shanbhag Pharmacology', fileId: '1_aP0WWZHib6vmf_SSieraUPt35oQ05TS' },
     { title: 'Review of Pharmacology (GRG-14e)', fileId: '1ggi0Vf4MUKkiVgSBVMEdEcVrwMaaSELS' }
   ],
   Microbiology: [
     { title: 'Toy, Skinner, DeBord: Introductory Microbiology', fileId: '1BcRH4Wk-8YonQs4nWGoKbf9lUTT4fkXZ' },
     { title: 'Microbiology MCQ Compendium', fileId: '1GPGQ9r8FF25XPlESO7TuNtHkRr9TXEYG' },
-    { title: "MZ24 Notes: Ananthanarayan & Paniker's Microbiology", fileId: '1eYA2DayOYA2agFRO5doKQ2dhsxuwX_tX' },
-    { title: 'MZ24 Notes: Apurba S. Sastry Microbiology', fileId: '1ogtEInlOPfZe3Sah5MTt34o2eQySPFOP' },
+    { title: "Ananthanarayan & Paniker's Microbiology", fileId: '1eYA2DayOYA2agFRO5doKQ2dhsxuwX_tX' },
+    { title: 'Apurba S. Sastry Microbiology', fileId: '1ogtEInlOPfZe3Sah5MTt34o2eQySPFOP' },
     { title: 'Microbiology Preparation Notes', fileId: '176zBTN63xZCBR23UgrrZercvR79lIh4o' }
   ]
 };
