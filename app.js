@@ -1,15 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { getAnalytics, isSupported } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyCtyq8Mb_r7PVj4JQBZBU_EZxS6KmlXkgk',
-  authDomain: 'resourceroot-91754.firebaseapp.com',
-  projectId: 'resourceroot-91754',
-  storageBucket: 'resourceroot-91754.firebasestorage.app',
-  messagingSenderId: '163531676541',
-  appId: '1:163531676541:web:3153490817d631e6ec8a14',
-  measurementId: 'G-DLSYZXP2SG'
-};
+import { firebaseConfig } from './firebase-config.js';
 
 const firebaseApp = initializeApp(firebaseConfig);
 isSupported().then((supported) => {
