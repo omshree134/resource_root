@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resource Root PDF Viewer</title>
+  <style>
+    :root {
+      --bg: #050814;
+      --text: #e5edf9;
+      --line: rgba(147, 197, 253, 0.28);
+      --panel: rgba(15, 23, 42, 0.86);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Manrope, system-ui, sans-serif; }
+    .viewer-shell {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .viewer-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .viewer-head-left {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .viewer-title-wrap {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .viewer-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .viewer-title-sub {
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #bcd1ee;
+      line-height: 1.2;
+    }
+    .viewer-back {
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      color: var(--text);
+      background: rgba(30, 41, 59, 0.85);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .viewer-back-arrow {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .pdf-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .viewer-title-sub code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+    .viewer-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    @media (max-width: 640px) {
+      .viewer-head {
+        padding: 8px 10px;
+      }
+      .viewer-title {
+        font-size: 14px;
+      }
+      .viewer-title-sub {
+        font-size: 11px;
+      }
+      .viewer-back {
+        padding: 7px 10px;
+        font-size: 13px;
+      }
+      .viewer-back-arrow {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewer-shell">
+    <header class="viewer-head">
+      <div class="viewer-head-left">
+        <button id="viewerBack" class="viewer-back viewer-back-arrow" type="button" aria-label="Back to Library">&#8592;</button>
+        <div class="viewer-title-wrap">
+          <h1 id="viewerTitle" class="viewer-title">PDF Viewer</h1>
+          <span id="viewerPassword" class="viewer-title-sub" hidden></span>
+        </div>
+      </div>
+      <div class="viewer-actions">
+        <a id="openDrive" class="viewer-back" target="_blank" rel="noopener noreferrer">Open in Drive</a>
+      </div>
+    </header>
+    <iframe id="pdfFrame" class="pdf-frame" allow="autoplay"></iframe>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const fileId = params.get('fileId');
+    const title = params.get('title');
+    const year = params.get('year');
+    const subject = params.get('subject');
+    const password = params.get('password');
+    const passwordByFileId = {
+      '1kUklhn-rym2ubVRk-u0V9UgXcm2rt94g': 'aadi@patho'
+    };
+    const viewerTitle = document.getElementById('viewerTitle');
+    const viewerPassword = document.getElementById('viewerPassword');
+    const pdfFrame = document.getElementById('pdfFrame');
+    const viewerBack = document.getElementById('viewerBack');
+    const openDrive = document.getElementById('openDrive');
+
+    if (title) viewerTitle.textContent = decodeURIComponent(title);
+    if (fileId) {
+      const previewUrl = `https://drive.google.com/file/d/${fileId}/preview#view=FitH`;
+      const driveUrl = `https://drive.google.com/file/d/${fileId}/view`;
+      pdfFrame.src = previewUrl;
+      openDrive.href = driveUrl;
+    } else {
+      viewerTitle.textContent = 'No PDF selected';
+      openDrive.style.display = 'none';
+    }
+    const effectivePassword = password || (fileId ? passwordByFileId[fileId] : null);
+    if (effectivePassword) {
+      viewerPassword.hidden = false;
+      viewerPassword.innerHTML = `Password: <code>${effectivePassword}</code>`;
+    }
+
+    viewerBack.addEventListener('click', () => {
+      const backParams = new URLSearchParams();
+      if (year) backParams.set('year', year);
+      if (subject) backParams.set('subject', subject);
+      const query = backParams.toString();
+      window.location.href = query ? `index.html?${query}` : 'index.html';
+    });
+  </script>
+</body>
+</html>
+

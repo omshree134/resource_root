@@ -1,9 +1,29 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+import { getAnalytics, isSupported } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyCtyq8Mb_r7PVj4JQBZBU_EZxS6KmlXkgk',
+  authDomain: 'resourceroot-91754.firebaseapp.com',
+  projectId: 'resourceroot-91754',
+  storageBucket: 'resourceroot-91754.firebasestorage.app',
+  messagingSenderId: '163531676541',
+  appId: '1:163531676541:web:3153490817d631e6ec8a14',
+  measurementId: 'G-DLSYZXP2SG'
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+isSupported().then((supported) => {
+  if (supported) {
+    getAnalytics(firebaseApp);
+  }
+});
+
 const data = {
   appName: 'Resource Root',
   years: [
     { id: 'year1', label: '1st Year', subjects: ['Anatomy', 'Physiology', 'Biochemistry'] },
     { id: 'year2', label: '2nd Year', subjects: ['Pharmacology', 'Pathology', 'Microbiology'] },
-    { id: 'year3', label: '3rd Year', subjects: ['Community Medicine', 'ENT', 'Ophthalmology'] },
+    { id: 'year3', label: '3rd Year', subjects: ['Community Medicine', 'FMT', 'ENT', 'Ophthalmology'] },
     { id: 'year4', label: '4th Year', subjects: ['Medicine', 'Surgery', 'Pediatrics', 'Orthopedics', 'Obstetrics & Gynecology'] }
   ]
 };
@@ -12,8 +32,41 @@ const subjectLinks = {
   Pathology: 'https://drive.google.com/drive/folders/1eat7kdaVT9m1DyGYyjfqHbC0CUOTaKQr',
   Pharmacology: 'https://drive.google.com/drive/folders/1K0eSdKrp6DfacWllbSG_eZrRqKpkVwsc'
 };
+const subjectPdfs = {
+  Pathology: [
+    { title: 'Lange Case Files: Pathology', fileId: '14eEmJBgeQkjuV1_YMAs6MhweSvfcFB6x' },
+    { title: 'MedLive Pathology Prof Buster', fileId: '1rrrY_oZrNOg1oec8LaCk_ohqTuWZjDZl' },
+    { title: 'MZ24 Notes: Harsh Mohan Pathology', fileId: '1UQe_TS9wlYXbZc9KufjwqjWHnHBhekyp' },
+    { title: 'MZ24 Notes: Ramadas Nayak Pathology Exam Prep', fileId: '1RZGMWR-2h6r1qQ7cLoV6xmG9OgO3mj-g' },
+    { title: 'MZ24 Notes: Robbins Pathology (11th Edition)', fileId: '1rGzejj30EfzF4DO8VEpOQqP0t32TIVlF' },
+    { title: 'Pathology Slides Part 1 (Aaditya)', fileId: '1kUklhn-rym2ubVRk-u0V9UgXcm2rt94g', password: 'aadi@patho' },
+    { title: 'Robbins Pathology at a Glance', fileId: '1fgat_sZAX6y-cpUID0mLFzqM_WVHFz1p' },
+    { title: 'Pathoma 2021', fileId: '1eZ2lJAqh1bqxSmmItqVvNttBjYoJ9B0M' },
+    { title: 'Review of Pathology and Genetics', fileId: '1EmpcrUu7XKjk1E6AiezFEFHXQjv9geZe' }
+  ],
+  Pharmacology: [
+    { title: 'Case Files Pharmacology (3rd Edition)', fileId: '1K_ZNMpx4ab-5MQW6KjFi-r97lAQN4IR-' },
+    { title: 'Gobind Rai Pharmacology', fileId: '1v_g4NUUJBT-odwTFMZasD-pndS4rCT8k' },
+    { title: 'K.D. Tripathi: Classification of Drugs with Doses and Preparations', fileId: '114OV5arctTal_hN6e8U7JOqYcVnIWvBF' },
+    { title: 'Katzung Pharmacology Exam Notes', fileId: '1spnGVdYxv6qBO7-iFfZuH9n1PtN0wyEI' },
+    { title: 'MedLive Pharmacology Notes', fileId: '1VjOVzuUG0cBu8ZsPVxa2vJ4ZhmIdBkYy' },
+    { title: 'MZ24 Notes: K.D. Tripathi Essentials of Pharmacology', fileId: '1eM1lCvQHZXsH8Ezs4s3Q39zUkOFKzkaH' },
+    { title: 'MZ24 Notes: Lippincott Illustrated Reviews Pharmacology', fileId: '10G5PjocSxGo1Tkk0KffHgJTuJ8xIrmQx' },
+    { title: 'MZ24 Notes: Padmaja Medical Pharmacology', fileId: '1fWfDaXdRdqmKdAHPE252u55CwF_xWmAd' },
+    { title: 'MZ24 Notes: Tara V. Shanbhag Pharmacology', fileId: '1_aP0WWZHib6vmf_SSieraUPt35oQ05TS' },
+    { title: 'Review of Pharmacology (GRG-14e)', fileId: '1ggi0Vf4MUKkiVgSBVMEdEcVrwMaaSELS' }
+  ],
+  Microbiology: [
+    { title: 'Toy, Skinner, DeBord: Introductory Microbiology', fileId: '1BcRH4Wk-8YonQs4nWGoKbf9lUTT4fkXZ' },
+    { title: 'Microbiology MCQ Compendium', fileId: '1GPGQ9r8FF25XPlESO7TuNtHkRr9TXEYG' },
+    { title: "MZ24 Notes: Ananthanarayan & Paniker's Microbiology", fileId: '1eYA2DayOYA2agFRO5doKQ2dhsxuwX_tX' },
+    { title: 'MZ24 Notes: Apurba S. Sastry Microbiology', fileId: '1ogtEInlOPfZe3Sah5MTt34o2eQySPFOP' },
+    { title: 'Microbiology Preparation Notes', fileId: '176zBTN63xZCBR23UgrrZercvR79lIh4o' }
+  ]
+};
 
 const hint = document.getElementById('hint');
+const installHint = document.getElementById('installHint');
 const treeCanvas = document.getElementById('treeCanvas');
 const nodeLayer = document.getElementById('nodeLayer');
 const linkLayer = document.getElementById('linkLayer');
@@ -21,6 +74,54 @@ const ns = 'http://www.w3.org/2000/svg';
 const ROOT_NODE_ID = 'graph-root';
 const CHILD_NODE_CLASS = 'graph-child';
 let selectedYearId = null;
+let selectedSubject = null;
+
+function isStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function getInstallHintText() {
+  const ua = window.navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  if (isIOS) {
+    return 'Tip: Use Share -> Add to Home Screen for an app-like experience.';
+  }
+  return 'Tip: Add this site to your Home Screen for an app-like experience.';
+}
+
+function updateInstallHint(visibleOnHome) {
+  if (!installHint) return;
+  const show = visibleOnHome && !isStandaloneMode();
+  installHint.hidden = !show;
+  if (show) {
+    installHint.textContent = getInstallHintText();
+  }
+}
+
+function syncUrlState() {
+  const params = new URLSearchParams();
+  if (selectedYearId) params.set('year', selectedYearId);
+  if (selectedSubject) params.set('subject', selectedSubject);
+  const query = params.toString();
+  const nextUrl = query ? `index.html?${query}` : 'index.html';
+  window.history.replaceState({}, '', nextUrl);
+}
+
+function hydrateStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const year = params.get('year');
+  const subject = params.get('subject');
+  const validYear = data.years.find((y) => y.id === year);
+  if (validYear) {
+    selectedYearId = validYear.id;
+  }
+  if (subject) {
+    const validSubject = validYear && validYear.subjects.includes(subject);
+    if (validSubject) {
+      selectedSubject = subject;
+    }
+  }
+}
 
 const subjectLayouts = {
   3: {
@@ -85,13 +186,14 @@ function clearTree() {
   linkLayer.innerHTML = '';
 }
 
-function addNode({ id, label, x, y, type, logoOnly = false, icon = false, onClick, asRoot = false, asChild = false }) {
+function addNode({ id, label, x, y, type, logoOnly = false, icon = false, onClick, asRoot = false, asChild = false, extraClasses = '', enterDelay = 0 }) {
   const el = document.createElement('button');
   el.type = 'button';
-  el.className = `node ${type}${logoOnly ? ' logo-only' : ''}`;
+  el.className = `node ${type}${logoOnly ? ' logo-only' : ''}${extraClasses ? ` ${extraClasses}` : ''}`;
   el.style.left = `${x}%`;
   el.style.top = `${y}%`;
   el.dataset.id = id;
+  el.style.setProperty('--enter-delay', `${enterDelay}ms`);
 
   if (asRoot) {
     el.id = ROOT_NODE_ID;
@@ -271,6 +373,8 @@ function renderYear() {
     y: variant === 'mobile' ? 44 : variant === 'tablet' ? 50 : 54,
     type: 'root',
     asRoot: true,
+    extraClasses: 'enter-pop',
+    enterDelay: 70,
     onClick: () => {
       selectedYearId = null;
       render();
@@ -282,6 +386,7 @@ function renderYear() {
   year.subjects.forEach((subject, i) => {
     const p = layout[i];
     const link = subjectLinks[subject];
+    const resources = subjectPdfs[subject] || [];
     addNode({
       id: `${year.id}-${i}`,
       label: subject,
@@ -289,17 +394,77 @@ function renderYear() {
       y: p.y,
       type: 'subject',
       asChild: true,
-      onClick: link ? () => window.open(link, '_blank', 'noopener,noreferrer') : undefined
+      extraClasses: 'enter-pop',
+      enterDelay: 140 + i * 80,
+      onClick: () => {
+        if (resources.length) {
+          selectedSubject = subject;
+          render();
+          return;
+        }
+        if (link) {
+          window.open(link, '_blank', 'noopener,noreferrer');
+        }
+      }
     });
   });
 }
 
+function createEl(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (typeof text === 'string') el.textContent = text;
+  return el;
+}
+
+function renderSubjectLibrary() {
+  clearTree();
+  const year = data.years.find((y) => y.id === selectedYearId);
+  const resources = subjectPdfs[selectedSubject] || [];
+  hint.textContent = `${selectedSubject} library`;
+
+  const container = createEl('div', 'library-view');
+  container.classList.add('enter');
+  const header = createEl('div', 'library-head');
+  const backYearBtn = createEl('button', 'library-back-btn', '\u2190');
+  backYearBtn.setAttribute('aria-label', `Back to ${year ? year.label : 'Year'}`);
+  backYearBtn.type = 'button';
+  backYearBtn.addEventListener('click', () => {
+    selectedSubject = null;
+    render();
+  });
+  const title = createEl('h2', 'library-title', selectedSubject);
+  header.append(backYearBtn, title);
+  const list = createEl('div', 'book-list');
+  resources.forEach((book) => {
+    const btn = createEl('button', 'book-item', book.title);
+    btn.type = 'button';
+    btn.style.setProperty('--list-delay', `${70 + list.children.length * 55}ms`);
+    btn.addEventListener('click', () => {
+      const titleParam = encodeURIComponent(book.title);
+      const yearParam = encodeURIComponent(selectedYearId || '');
+      const subjectParam = encodeURIComponent(selectedSubject || '');
+      const passwordParam = book.password ? `&password=${encodeURIComponent(book.password)}` : '';
+      window.location.href = `viewer.html?fileId=${book.fileId}&title=${titleParam}&year=${yearParam}&subject=${subjectParam}${passwordParam}`;
+    });
+    list.appendChild(btn);
+  });
+  container.append(header, list);
+  nodeLayer.appendChild(container);
+}
+
 function render() {
-  if (selectedYearId) {
+  const isHome = !selectedYearId && !selectedSubject;
+  updateInstallHint(isHome);
+
+  if (selectedSubject) {
+    renderSubjectLibrary();
+  } else if (selectedYearId) {
     renderYear();
   } else {
     renderHome();
   }
+  syncUrlState();
   requestAnimationFrame(drawConnections);
 }
 
@@ -312,4 +477,5 @@ window.addEventListener('resize', drawConnections);
 window.addEventListener('orientationchange', drawConnections);
 window.addEventListener('load', drawConnections);
 
+hydrateStateFromUrl();
 render();
