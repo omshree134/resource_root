@@ -4,8 +4,8 @@
   "description": "Interactive MBBS notes and study tree",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#050814",
-  "theme_color": "#050814",
+  "background_color": "#090b10",
+  "theme_color": "#090b10",
   "icons": [
     {
       "src": "/icons/icon_root.png",

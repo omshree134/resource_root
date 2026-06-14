@@ -6,10 +6,11 @@
   <title>Resource Root PDF Viewer</title>
   <style>
     :root {
-      --bg: #050814;
-      --text: #e5edf9;
-      --line: rgba(147, 197, 253, 0.28);
-      --panel: rgba(15, 23, 42, 0.86);
+      --bg: #090b10;
+      --text: #f4efe8;
+      --line: rgba(150, 161, 180, 0.22);
+      --panel: rgba(17, 21, 30, 0.9);
+      --accent: #ff7a12;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Manrope, system-ui, sans-serif; }
@@ -51,13 +52,13 @@
       margin-top: 3px;
       font-size: 12px;
       font-weight: 500;
-      color: #bcd1ee;
+      color: #b7b1a8;
       line-height: 1.2;
     }
     .viewer-back {
-      border: 1px solid rgba(147, 197, 253, 0.35);
+      border: 1px solid rgba(150, 161, 180, 0.24);
       color: var(--text);
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(24, 29, 40, 0.88);
       border-radius: 999px;
       padding: 8px 12px;
       font-size: 14px;
@@ -78,7 +79,7 @@
       height: 100%;
       border: 0;
     }
-    .viewer-title-sub code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+    .viewer-title-sub code { color: #ffd0a1; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
     .viewer-actions {
       display: flex;
       align-items: center;
@@ -124,7 +125,9 @@
     <iframe id="pdfFrame" class="pdf-frame" allow="autoplay"></iframe>
   </main>
 
-  <script>
+  <script type="module">
+    import { logAppEvent, trackScreen } from './analytics.js';
+
     const params = new URLSearchParams(window.location.search);
     const fileId = params.get('fileId');
     const title = params.get('title');
@@ -146,9 +149,23 @@
       const driveUrl = `https://drive.google.com/file/d/${fileId}/view`;
       pdfFrame.src = previewUrl;
       openDrive.href = driveUrl;
+      trackScreen('pdf_viewer', {
+        year_id: year || 'root',
+        subject_name: subject || 'unknown',
+        book_title: title || 'unknown',
+        file_id: fileId
+      });
+      logAppEvent('pdf_viewed', {
+        year_id: year || 'root',
+        subject_name: subject || 'unknown',
+        book_title: title || 'unknown',
+        file_id: fileId,
+        has_password: Boolean(password || passwordByFileId[fileId])
+      });
     } else {
       viewerTitle.textContent = 'No PDF selected';
       openDrive.style.display = 'none';
+      trackScreen('pdf_viewer_empty');
     }
     const effectivePassword = password || (fileId ? passwordByFileId[fileId] : null);
     if (effectivePassword) {
@@ -157,11 +174,26 @@
     }
 
     viewerBack.addEventListener('click', () => {
+      logAppEvent('viewer_back_clicked', {
+        year_id: year || 'root',
+        subject_name: subject || 'unknown',
+        book_title: title || 'unknown',
+        file_id: fileId || 'unknown'
+      });
       const backParams = new URLSearchParams();
       if (year) backParams.set('year', year);
       if (subject) backParams.set('subject', subject);
       const query = backParams.toString();
       window.location.href = query ? `index.html?${query}` : 'index.html';
+    });
+
+    openDrive.addEventListener('click', () => {
+      logAppEvent('open_in_drive_clicked', {
+        year_id: year || 'root',
+        subject_name: subject || 'unknown',
+        book_title: title || 'unknown',
+        file_id: fileId || 'unknown'
+      });
     });
   </script>
 </body>

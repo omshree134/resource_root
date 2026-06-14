@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#050814" />
+  <meta name="theme-color" content="#090b10" />
   <meta name="description" content="Resource Root - Interactive MBBS knowledge tree" />
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('year') || params.get('subject')) {
+        document.documentElement.classList.add('pre-route');
+      }
+    })();
+  </script>
   <link rel="manifest" href="public/manifest.webmanifest" />
   <link rel="icon" type="image/png" href="public/icons/icon_root.png" />
   <link rel="apple-touch-icon" href="public/icons/icon_root.png" />
@@ -20,17 +28,75 @@
       <header class="hero">
         <h1>Resource Root</h1>
         <p>Interactive MBBS Learning Graph</p>
-        <small id="hint">Choose a year to explore subjects.</small>
-        <small id="installHint" class="install-hint" hidden></small>
+        <small id="hint">Choose a year or open Question Bank.</small>
+        <div id="searchPanel" class="search-panel">
+          <label class="search-label" for="globalSearch">Universal Search</label>
+          <input
+            id="globalSearch"
+            class="search-input"
+            type="search"
+            placeholder="Search any book name"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div id="searchResults" class="search-results" aria-live="polite"></div>
+        </div>
       </header>
 
       <div id="treeCanvas" class="tree-canvas" aria-live="polite">
         <svg id="linkLayer" class="link-layer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-        <div id="nodeLayer" class="node-layer"></div>
+        <div id="nodeLayer" class="node-layer">
+          <button
+            id="graph-root"
+            class="node root logo-only"
+            type="button"
+            data-static-home="true"
+          >
+            <img src="public/icons/icon_root.png" alt="App logo" class="logo" />
+            <span class="label">Resource Root</span>
+          </button>
+
+          <button
+            class="node year graph-child"
+            type="button"
+            data-home-item-id="year1"
+            data-home-slot="1"
+            data-static-home="true"
+          >
+            <span class="label">1st Year</span>
+          </button>
+          <button
+            class="node year graph-child"
+            type="button"
+            data-home-item-id="year2"
+            data-home-slot="2"
+            data-static-home="true"
+          >
+            <span class="label">2nd Year</span>
+          </button>
+          <button
+            class="node year graph-child"
+            type="button"
+            data-home-item-id="year3"
+            data-home-slot="3"
+            data-static-home="true"
+          >
+            <span class="label">3rd Year</span>
+          </button>
+          <button
+            class="node year graph-child"
+            type="button"
+            data-home-item-id="year4"
+            data-home-slot="4"
+            data-static-home="true"
+          >
+            <span class="label">4th Year</span>
+          </button>
+        </div>
       </div>
+      <small id="installHint" class="install-hint" hidden></small>
     </section>
   </main>
-
   <script type="module" src="app.js"></script>
 </body>
 </html>
